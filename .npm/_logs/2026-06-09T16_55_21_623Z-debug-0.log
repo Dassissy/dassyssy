@@ -1,0 +1,44 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.9.7
+2 info using node@v22.22.2
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/mcp-server/.npmrc
+5 silly config load:file:/tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install
+8 verbose argv "install"
+9 verbose logfile logs-max:10 dir:/tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npm/_logs/2026-06-09T16_55_21_623Z-
+10 verbose logfile /tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npm/_logs/2026-06-09T16_55_21_623Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:1098907648 maxSize:274726912 maxEntrySize:137363456
+13 silly idealTree buildDeps
+14 silly fetch manifest @cloudbase/functions-framework@^2.0.0
+15 silly packumentCache full:https://registry.npmjs.org/@cloudbase%2ffunctions-framework cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/@cloudbase%2ffunctions-framework 879ms (cache revalidated)
+17 silly packumentCache full:https://registry.npmjs.org/@cloudbase%2ffunctions-framework set size:168072 disposed:false
+18 silly placeDep ROOT @cloudbase/functions-framework@ OK for: cloudbase-mcp-server@1.0.0 want: ^2.0.0
+19 verbose type range
+20 verbose stack @cloudbase/functions-framework: No matching version found for @cloudbase/functions-framework@^2.0.0.
+20 verbose stack     at module.exports (/usr/local/lib/node_modules/npm/node_modules/npm-pick-manifest/lib/index.js:215:23)
+20 verbose stack     at RegistryFetcher.manifest (/usr/local/lib/node_modules/npm/node_modules/pacote/lib/registry.js:130:54)
+20 verbose stack     at async #fetchManifest (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1202:20)
+20 verbose stack     at async #nodeFromEdge (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1040:19)
+20 verbose stack     at async #buildDepStep (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:904:11)
+20 verbose stack     at async Arborist.buildIdealTree (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:181:7)
+20 verbose stack     at async Promise.all (index 1)
+20 verbose stack     at async Arborist.reify (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:133:5)
+20 verbose stack     at async Install.exec (/usr/local/lib/node_modules/npm/lib/commands/install.js:150:5)
+20 verbose stack     at async Npm.exec (/usr/local/lib/node_modules/npm/lib/npm.js:207:9)
+21 error code ETARGET
+22 error notarget No matching version found for @cloudbase/functions-framework@^2.0.0.
+23 error notarget In most cases you or one of your dependencies are requesting
+23 error notarget a package version that doesn't exist.
+24 silly unfinished npm timer reify 1781024122911
+25 silly unfinished npm timer reify:loadTrees 1781024122916
+26 verbose cwd /tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/mcp-server
+27 verbose os Linux 5.4.119-19-0009-03_2.0.1-00029-gee3a514c359c
+28 verbose node v22.22.2
+29 verbose npm  v10.9.7
+30 verbose exit 1
+31 verbose code 1
+32 error A complete log of this run can be found in: /tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npm/_logs/2026-06-09T16_55_21_623Z-debug-0.log

@@ -1,0 +1,18 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.9.7
+2 info using node@v22.22.2
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npmrc
+5 silly config load:file:/usr/local/etc/npmrc
+6 verbose title npm view @cloudbase/functions-framework versions
+7 verbose argv "view" "@cloudbase/functions-framework" "versions" "--json"
+8 verbose logfile logs-max:10 dir:/tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npm/_logs/2026-06-09T16_55_28_051Z-
+9 verbose logfile /tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4/.npm/_logs/2026-06-09T16_55_28_051Z-debug-0.log
+10 silly logfile done cleaning log files
+11 http fetch GET 200 https://registry.npmjs.org/@cloudbase%2ffunctions-framework 682ms (cache revalidated)
+12 verbose cwd /tmp/workspace/9c89d120-e09e-422e-a631-5e5155c628b4
+13 verbose os Linux 5.4.119-19-0009-03_2.0.1-00029-gee3a514c359c
+14 verbose node v22.22.2
+15 verbose npm  v10.9.7
+16 verbose exit 0
+17 info ok
