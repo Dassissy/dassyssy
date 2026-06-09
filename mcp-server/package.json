@@ -5,15 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "npx @cloudbase/functions-framework --watch"
+    "dev": "npx @cloudbase/functions-framework"
   },
   "keywords": ["mcp", "server"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@cloudbase/functions-framework": "^1.0.0",
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "express": "^4.18.2",
-    "zod": "^3.22.4"
+    "@modelcontextprotocol/sdk": "^1.0.0"
   }
 }

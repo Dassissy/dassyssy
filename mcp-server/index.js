@@ -1,4 +1,4 @@
-const { http } = require('@cloudbase/functions-framework');
+const { functionFramework } = require('@cloudbase/functions-framework');
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
 const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js');
 const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
@@ -92,47 +92,40 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 // 存储 SSE 传输实例
-let transport = null;
+const transports = new Map();
 
-// 定义主函数
-http('main', async (req, res) => {
-  const path = req.path || req.url;
+// 注册 SSE 端点
+functionFramework.http('sse', async (req, res) => {
+  const transport = new SSEServerTransport('/messages', res);
+  transports.set(transport.sessionId, transport);
+  await server.connect(transport);
+});
 
-  // 根路径
-  if (path === '/' || path === '') {
-    return res.json({
-      name: 'CloudBase MCP Server',
-      version: '1.0.0',
-      endpoints: {
-        sse: '/sse',
-        messages: '/messages',
-        health: '/health'
-      }
-    });
+// 注册消息处理端点
+functionFramework.http('messages', async (req, res) => {
+  const sessionId = req.query.sessionId;
+  const transport = transports.get(sessionId);
+  if (transport) {
+    await transport.handlePostMessage(req, res);
+  } else {
+    res.status(400).json({ error: 'No active SSE connection' });
   }
+});
 
-  // 健康检查
-  if (path === '/health') {
-    return res.json({ status: 'ok', timestamp: new Date().toISOString() });
-  }
+// 健康检查
+functionFramework.http('health', async (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
-  // SSE 端点
-  if (path === '/sse') {
-    transport = new SSEServerTransport('/messages', res);
-    await server.connect(transport);
-    return;
-  }
-
-  // 消息处理端点
-  if (path === '/messages') {
-    if (transport) {
-      await transport.handlePostMessage(req, res);
-    } else {
-      return res.status(400).json({ error: 'No active SSE connection' });
+// 根路径
+functionFramework.http('main', async (req, res) => {
+  res.json({
+    name: 'CloudBase MCP Server',
+    version: '1.0.0',
+    endpoints: {
+      sse: '/sse',
+      messages: '/messages',
+      health: '/health'
     }
-    return;
-  }
-
-  // 404
-  return res.status(404).json({ error: 'Not found' });
+  });
 });
