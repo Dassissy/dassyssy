@@ -1,12 +1,7 @@
-const express = require('express');
+const { http } = require('@cloudbase/functions-framework');
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
 const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js');
 const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
-const { z } = require('zod');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
 
 // MCP 工具定义
 const tools = [
@@ -96,44 +91,48 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-// 用于存储 SSE 传输实例
+// 存储 SSE 传输实例
 let transport = null;
 
-// SSE 端点
-app.get('/sse', async (req, res) => {
-  transport = new SSEServerTransport('/messages', res);
-  await server.connect(transport);
-});
+// 定义主函数
+http('main', async (req, res) => {
+  const path = req.path || req.url;
 
-// 消息处理端点
-app.post('/messages', async (req, res) => {
-  if (transport) {
-    await transport.handlePostMessage(req, res);
-  } else {
-    res.status(400).json({ error: 'No active SSE connection' });
+  // 根路径
+  if (path === '/' || path === '') {
+    return res.json({
+      name: 'CloudBase MCP Server',
+      version: '1.0.0',
+      endpoints: {
+        sse: '/sse',
+        messages: '/messages',
+        health: '/health'
+      }
+    });
   }
-});
 
-// 健康检查
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+  // 健康检查
+  if (path === '/health') {
+    return res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  }
 
-// 根路径
-app.get('/', (req, res) => {
-  res.json({
-    name: 'CloudBase MCP Server',
-    version: '1.0.0',
-    endpoints: {
-      sse: '/sse',
-      messages: '/messages',
-      health: '/health'
+  // SSE 端点
+  if (path === '/sse') {
+    transport = new SSEServerTransport('/messages', res);
+    await server.connect(transport);
+    return;
+  }
+
+  // 消息处理端点
+  if (path === '/messages') {
+    if (transport) {
+      await transport.handlePostMessage(req, res);
+    } else {
+      return res.status(400).json({ error: 'No active SSE connection' });
     }
-  });
-});
+    return;
+  }
 
-app.listen(PORT, () => {
-  console.log(`MCP Server running on port ${PORT}`);
-  console.log(`SSE endpoint: http://localhost:${PORT}/sse`);
-  console.log(`Health check: http://localhost:${PORT}/health`);
+  // 404
+  return res.status(404).json({ error: 'Not found' });
 });
