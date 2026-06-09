@@ -1,4 +1,3 @@
-const { functionFramework } = require('@cloudbase/functions-framework');
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
 const { SSEServerTransport } = require('@modelcontextprotocol/sdk/server/sse.js');
 const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
@@ -94,31 +93,44 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 // 存储 SSE 传输实例
 const transports = new Map();
 
-// 注册 SSE 端点
-functionFramework.http('sse', async (req, res) => {
-  const transport = new SSEServerTransport('/messages', res);
-  transports.set(transport.sessionId, transport);
-  await server.connect(transport);
-});
+// 主处理函数
+module.exports = async (req, res) => {
+  const { path } = req;
 
-// 注册消息处理端点
-functionFramework.http('messages', async (req, res) => {
-  const sessionId = req.query.sessionId;
-  const transport = transports.get(sessionId);
-  if (transport) {
-    await transport.handlePostMessage(req, res);
-  } else {
-    res.status(400).json({ error: 'No active SSE connection' });
+  // SSE 端点
+  if (path === '/sse' || path === '/sse/') {
+    const transport = new SSEServerTransport('/messages', res);
+    const sessionId = transport.sessionId;
+    transports.set(sessionId, transport);
+    
+    res.on('close', () => {
+      transports.delete(sessionId);
+    });
+    
+    await server.connect(transport);
+    return;
   }
-});
 
-// 健康检查
-functionFramework.http('health', async (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
+  // 消息处理端点
+  if (path === '/messages' || path.startsWith('/messages')) {
+    const sessionId = req.query.sessionId;
+    const transport = transports.get(sessionId);
+    
+    if (transport) {
+      await transport.handlePostMessage(req, res);
+    } else {
+      res.status(400).json({ error: 'No active SSE connection' });
+    }
+    return;
+  }
 
-// 根路径
-functionFramework.http('main', async (req, res) => {
+  // 健康检查
+  if (path === '/health' || path === '/health/') {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    return;
+  }
+
+  // 根路径 - 返回服务信息
   res.json({
     name: 'CloudBase MCP Server',
     version: '1.0.0',
@@ -128,4 +140,4 @@ functionFramework.http('main', async (req, res) => {
       health: '/health'
     }
   });
-});
+};

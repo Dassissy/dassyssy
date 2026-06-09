@@ -4,14 +4,14 @@
   "description": "MCP Server deployed on CloudBase Run",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npx @cloudbase/functions-framework",
     "dev": "npx @cloudbase/functions-framework"
   },
   "keywords": ["mcp", "server"],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cloudbase/functions-framework": "^1.0.0",
+    "@cloudbase/functions-framework": "latest",
     "@modelcontextprotocol/sdk": "^1.0.0"
   }
 }
