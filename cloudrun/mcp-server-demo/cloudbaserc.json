@@ -1,0 +1,6 @@
+{
+  "envId": "test-d2g1mq31la0ecece8",
+  "cloudrun": {
+    "name": "mcp-server-demo"
+  }
+}

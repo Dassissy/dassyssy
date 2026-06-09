@@ -1,0 +1,18 @@
+{
+  "name": "cloudbase-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server deployed on CloudBase Run",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": ["mcp", "server"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "express": "^4.18.2",
+    "zod": "^3.22.4"
+  }
+}
